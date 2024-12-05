@@ -1,15 +1,24 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue"
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import Competition from "./components/Competition.vue"
+import type { Player } from "./components/Competition.vue";
 
 export default defineComponent({
   name: "App",
+  components: {
+    Competition
+  },
   setup() {
     const hello = ref("world")
+    const players = ref<Player[]>([{
+      name: "Larry"
+    }, {
+      name: "Gerson"
+    }])
 
     return {
-      hello
+      hello,
+      players,
     }
   }
 })
@@ -21,6 +30,7 @@ export default defineComponent({
 
   <main>
     <div>Hello {{ hello }}</div>
+    <Competition v-bind:laps-count="6" v-bind:players="players"></Competition>
   </main>
 </template>
 
