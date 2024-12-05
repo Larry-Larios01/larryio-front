@@ -28,14 +28,14 @@ export default defineComponent({
 
 <template>
 
-<div>
-    Players:
-    <ul v-for="player in players">
-        <li>{{ player.name }}</li>
-    </ul>
-</div>
-<div>
-    Laps: {{  lapsCount }}
-</div>
+    <div>
+        Players:
+        <ul v-for="player in players">
+            <li>{{ player.name }}</li>
+        </ul>
+    </div>
+    <div>
+        Laps: {{ lapsCount }}
+    </div>
 
 </template>
