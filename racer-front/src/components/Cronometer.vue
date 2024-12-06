@@ -10,7 +10,7 @@ export default defineComponent({
       type: Number, 
       required: true,   
     },
-    name: {
+    player: {
       type: String,  
       default:  "unknow",
     },

@@ -4,6 +4,7 @@ import { defineComponent, ref } from "vue"
 import type { PropType } from "vue";
 import type { Player } from "@/models";
 import Cronometer from "./Cronometer.vue";
+import { Key } from "readline";
 
 
 
@@ -53,11 +54,11 @@ export default defineComponent({
 
         <div v-if="competitionStarted">
 
-            <ul v-for="(player, index) in players">
+            <ul v-for="(player, index) in players ">
                 <label>{{ player.name }}
 
 
-                    <Cronometer v-bin:laps="lapsCount" v-bind:player="player.name"></Cronometer>
+                    <Cronometer v-bind:laps="lapsCount" v-bind:player="player.name"></Cronometer>
                 </label>
 
                 
