@@ -1,4 +1,5 @@
 <script lang="ts">
+import { onMounted } from 'vue';
 import { ref, defineComponent } from 'vue';
 
 export default defineComponent({
@@ -45,6 +46,8 @@ export default defineComponent({
     
     const evaluate = () => numbers.value.length < props.laps;
 
+    onMounted (() => {start();});
+
     
     return {
       start,
@@ -60,7 +63,6 @@ export default defineComponent({
 </script>
 
 <template>
-    <button v-on:click="start"> start </button>
     <button v-on:click="pause">pause</button>
     <button v-on:click="stop"> stop </button>
     <button v-if="evaluate()" @click="lap">lap</button>
