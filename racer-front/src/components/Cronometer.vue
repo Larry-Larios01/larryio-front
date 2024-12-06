@@ -1,9 +1,12 @@
 <script lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, PropType } from 'vue';
 import { ref, defineComponent } from 'vue';
+import type {Player, Results} from '@/models';
 
 export default defineComponent({
   name: 'Cronometer',
+
+  emits: ['finished'],
   
 
   props: {
@@ -12,7 +15,7 @@ export default defineComponent({
       required: true,   
     },
     player: {
-      type: String,  
+      type: Object as PropType<Player>, 
       default:  "unknow",
     },
   },

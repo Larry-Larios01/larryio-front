@@ -30,3 +30,9 @@ const value = {
         }
     ]
 } satisfies CompetitonCompleted
+
+
+export type Results = {
+    player: Player,
+    laps: Number[]
+}
