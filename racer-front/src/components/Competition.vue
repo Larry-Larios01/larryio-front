@@ -23,7 +23,14 @@ export default defineComponent({
         }
     },
     setup(props, ctx) {
-        return {}
+        const competitionStarted : boolean = ref(false);
+
+
+        function startCompetition(){
+            this.competitionStarted = true
+
+        }
+        return { competitionStarted, startCompetition}
     }
 })
 
@@ -43,16 +50,26 @@ export default defineComponent({
 
 
     <div>
-        <button>start competition</button>
+        <button v-on:click="startCompetition()">start competition</button>
 
-            cronometers
+        <div v-if="competitionStarted">
 
-        <ul v-for="player in players">
+            <ul v-for="(player, index) in players">
+                <label>{{ player.name }}
 
-            <Cronometer v-bin:lap="lapsCount", v-bind:player="player"></Cronometer>
+                    
+                    <Cronometer v-bin:lap="lapsCount", v-bind:player="player"></Cronometer>
+                </label>
 
-        </ul>
+                
 
+            </ul>
+
+
+
+        </div>
+
+       
         
         
 
