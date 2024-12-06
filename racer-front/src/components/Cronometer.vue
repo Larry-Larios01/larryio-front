@@ -8,7 +8,7 @@ export default defineComponent({
   props: {
     laps: {
       type: Number, 
-      default: 10,   
+      required: true,   
     },
     name: {
       type: String,  
@@ -63,7 +63,7 @@ export default defineComponent({
     <button v-on:click="start"> start </button>
     <button v-on:click="pause">pause</button>
     <button v-on:click="stop"> stop </button>
-    <button v-show="evaluate()" @click="lap">lap</button>
+    <button v-if="evaluate()" @click="lap">lap</button>
     <p>{{ count }}</p>
 
     <li v-for="lap in numbers">

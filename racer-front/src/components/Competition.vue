@@ -23,11 +23,10 @@ export default defineComponent({
         }
     },
     setup(props, ctx) {
-        const competitionStarted : boolean = ref(false);
-
+        let competitionStarted : boolean = ref(false);
 
         function startCompetition(){
-            this.competitionStarted = true
+            competitionStarted.value = true
 
         }
         return { competitionStarted, startCompetition}
@@ -57,8 +56,8 @@ export default defineComponent({
             <ul v-for="(player, index) in players">
                 <label>{{ player.name }}
 
-                    
-                    <Cronometer v-bin:lap="lapsCount", v-bind:player="player"></Cronometer>
+
+                    <Cronometer v-bin:laps="lapsCount" v-bind:player="player.name"></Cronometer>
                 </label>
 
                 
