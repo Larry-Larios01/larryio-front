@@ -34,5 +34,5 @@ const value = {
 
 export type Results = {
     player: Player,
-    laps: Number[]
+    laps: number[]
 }

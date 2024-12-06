@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, PropType } from 'vue';
+import { onMounted, PropType, reactive } from 'vue';
 import { ref, defineComponent } from 'vue';
 import type {Player, Results} from '@/models';
 
@@ -21,10 +21,14 @@ export default defineComponent({
   },
 
 
-  setup(props) { 
+  setup(props, {emit}) { 
     const count = ref(0);
     let cronometer: number;
     const numbers = ref<number[]>([]);
+      const result = reactive<Results>({
+      player: props.player,
+      laps: [], 
+    });
 
     function start() {
       cronometer = setInterval(() => {
@@ -37,13 +41,22 @@ export default defineComponent({
     }
 
     function stop() {
-      count.value = 0;
-      clearInterval(cronometer);
+      count.value = 0;     
+       clearInterval(cronometer);
       numbers.value = [];
     }
 
     function lap() {
       numbers.value.push(count.value);
+
+      if (!evaluate()){
+
+        result.laps = numbers.result
+
+        emit('finished', result)
+
+
+      }
     }
 
     

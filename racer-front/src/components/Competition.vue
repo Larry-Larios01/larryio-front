@@ -2,7 +2,7 @@
 
 import { defineComponent, ref } from "vue"
 import type { PropType } from "vue";
-import type { Player } from "@/models";
+import type { Player, Results } from "@/models";
 import Cronometer from "./Cronometer.vue";
 import { Key } from "readline";
 
@@ -24,13 +24,20 @@ export default defineComponent({
         }
     },
     setup(props, ctx) {
-        let competitionStarted : boolean = ref(false);
-
+        const  competitionStarted : boolean = ref(false);
+        const results = ref<Results[]>([]);
         function startCompetition(){
             competitionStarted.value = true
 
         }
-        return { competitionStarted, startCompetition}
+
+        function handlerFinished(resultt: Results){
+
+            results.value.push(resultt)
+
+
+        }
+        return { competitionStarted, startCompetition, handlerFinished, results}
     }
 })
 
@@ -58,7 +65,7 @@ export default defineComponent({
                 <label>{{ player.name }}
 
 
-                    <Cronometer v-bind:laps="lapsCount" v-bind:player="player.name"></Cronometer>
+                    <Cronometer v-bind:laps="lapsCount" v-bind:player="player"  v-on:finished="handlerFinished"></Cronometer>
                 </label>
 
                 
@@ -68,8 +75,9 @@ export default defineComponent({
 
 
         </div>
+        podium:
 
-       
+        <ul v-for="result in results"> {{ result}}</ul>
         
         
 
