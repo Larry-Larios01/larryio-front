@@ -2,10 +2,7 @@
 
 import { defineComponent, ref } from "vue"
 import type { PropType } from "vue";
-
-export type Player = {
-    name: string
-}
+import type { Player } from "@/models";
 
 export default defineComponent({
     name: "Competition",
@@ -20,7 +17,7 @@ export default defineComponent({
         }
     },
     setup(props, ctx) {
-
+        return {}
     }
 })
 

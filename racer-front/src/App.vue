@@ -1,24 +1,26 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue"
 import Competition from "./components/Competition.vue"
-import type { Player } from "./components/Competition.vue";
+import CompetitionRegistration from "./components/CompetitionRegistration.vue";
+import type { Competition as CompetitionT, Player } from "./models";
 
 export default defineComponent({
   name: "App",
   components: {
-    Competition
+    Competition,
+    CompetitionRegistration
   },
   setup() {
     const hello = ref("world")
-    const players = ref<Player[]>([{
-      name: "Larry"
-    }, {
-      name: "Gerson"
-    }])
+    const currentCompetition = ref<CompetitionT>()
+    function register(competion: CompetitionT) {
+      currentCompetition.value = competion
+    }
 
     return {
       hello,
-      players,
+      register,
+      currentCompetition
     }
   }
 })
@@ -30,7 +32,11 @@ export default defineComponent({
 
   <main>
     <div>Hello {{ hello }}</div>
-    <Competition v-bind:laps-count="6" v-bind:players="players"></Competition>
+    <CompetitionRegistration v-if="!currentCompetition" v-on:register="register">
+    </CompetitionRegistration>
+
+    <Competition v-if="currentCompetition" v-bind:laps-count="currentCompetition.lapsCount"
+      v-bind:players="currentCompetition.players"></Competition>
   </main>
 </template>
 
