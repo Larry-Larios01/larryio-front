@@ -1,5 +1,6 @@
 export type Player = {
     name: string
+    podium: Record<string, number>;
 }
 
 export type Competition = {
