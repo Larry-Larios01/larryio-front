@@ -3,12 +3,13 @@ import { defineComponent, ref } from "vue"
 import Competition from "./components/Competition.vue"
 import CompetitionRegistration from "./components/CompetitionRegistration.vue";
 import type { Competition as CompetitionT, Player } from "./models";
-
+import PlayerRegistration from "./components/PlayerRegistration.vue";
 export default defineComponent({
   name: "App",
   components: {
     Competition,
-    CompetitionRegistration
+    CompetitionRegistration,
+    PlayerRegistration
   },
   setup() {
     const hello = ref("world")
@@ -32,6 +33,7 @@ export default defineComponent({
 
   <main>
     <div>Hello {{ hello }}</div>
+    <PlayerRegistration> </PlayerRegistration>
     <CompetitionRegistration v-if="!currentCompetition" v-on:register="register">
     </CompetitionRegistration>
 
