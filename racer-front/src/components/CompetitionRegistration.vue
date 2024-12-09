@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import type { Competition } from "@/models";
-import { defineComponent, reactive, toRaw , PropType} from "vue";
+import { defineComponent, reactive, toRaw , PropType, ref} from "vue";
 import type { Player } from "@/models";
 
 
@@ -18,7 +18,7 @@ export default defineComponent({
     },
     props: {
         players: {
-            type: Object as PropType<Player[]>,
+            type: Array as PropType<Player[]>,
             required: true,
         },
         
@@ -29,6 +29,8 @@ export default defineComponent({
             lapsCount: 0,
             players: []
         })
+
+        const checkedNames = ref<string[]>([]); 
         function addPlayer() {
             competition.players.push({ name: "", podium: { place1: 0, place2: 0, place3: 0 },})
         }
@@ -42,7 +44,8 @@ export default defineComponent({
         return {
             competition,
             addPlayer,
-            save
+            save,
+            checkedNames
         }
     }
 })
@@ -65,12 +68,9 @@ export default defineComponent({
         </div>
 
 
-        <div>
-            <select name="players-registered" id="pr">
-                <option v-for="player in players" :key="player.name" :value="player.name">
-                    {{ player.name }}
-                </option>
-            </select>
+        <div v-for="player in players">
+            <input type="checkbox" v-bind:value="player.name" v-bind:id="player.name" v-model="checkedNames">
+            <label >{{ player.name }}</label>
         </div>
         <button type="submit">Save</button>
     </form>
