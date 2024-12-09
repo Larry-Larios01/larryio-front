@@ -30,20 +30,17 @@ export default defineComponent({
             players: []
         })
 
-        const checkedNames = ref<string[]>([]); 
-        function addPlayer() {
-            competition.players.push({ name: "", podium: { place1: 0, place2: 0, place3: 0 },})
-        }
-        console.log(props.players)
+        const checkedNames = ref<Player[]>([]); 
+       
 
         function save() {
+            competition.players = checkedNames.value
             const payload = toRaw(competition)
             ctx.emit("register", payload)
         }
 
         return {
             competition,
-            addPlayer,
             save,
             checkedNames
         }
@@ -69,7 +66,7 @@ export default defineComponent({
 
 
         <div v-for="player in players">
-            <input type="checkbox" v-bind:value="player.name" v-bind:id="player.name" v-model="checkedNames">
+            <input type="checkbox" v-bind:value="player" v-bind:id="player.name" v-model="checkedNames">
             <label >{{ player.name }}</label>
         </div>
         <button type="submit">Save</button>
