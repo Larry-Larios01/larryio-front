@@ -1,7 +1,8 @@
 <script lang="ts">
 
 import type { Competition } from "@/models";
-import { defineComponent, reactive, toRaw } from "vue";
+import { defineComponent, reactive, toRaw , PropType} from "vue";
+import type { Player } from "@/models";
 
 
 export default defineComponent({
@@ -14,6 +15,13 @@ export default defineComponent({
                 Array.isArray(payload.players) &&
                 payload.players.every(player => typeof player.name === "string")
         }
+    },
+    props: {
+        players: {
+            type: Object as PropType<Player[]>,
+            required: true,
+        },
+        
     },
     setup(props, ctx) {
         const competition = reactive<Competition>({
@@ -57,12 +65,12 @@ export default defineComponent({
 
 
         <div>
-            <div v-for="(player, index) in competition.players" v-bind:key="index">
-                <label>Player {{ index + 1 }}
-                    <input type="text" v-model="player.name">
+            <div v-for="(player, index) in players" v-bind:key="index">
+                <label>
+                    <input type="checkbox" >
                 </label>
+                Player {{ player.name }}
             </div>
-            <button type="button" v-on:click="addPlayer">Add Player</button>
         </div>
         <button type="submit">Save</button>
     </form>

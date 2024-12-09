@@ -14,14 +14,21 @@ export default defineComponent({
   setup() {
     const hello = ref("world")
     const currentCompetition = ref<CompetitionT>()
+    const playersRegistered = ref<Player[]>([]);
     function register(competion: CompetitionT) {
       currentCompetition.value = competion
+    }
+
+    function registerPlayer(players: Player[]){
+      playersRegistered.value = players
     }
 
     return {
       hello,
       register,
-      currentCompetition
+      currentCompetition,
+      registerPlayer,
+      playersRegistered
     }
   }
 })
@@ -33,8 +40,8 @@ export default defineComponent({
 
   <main>
     <div>Hello {{ hello }}</div>
-    <PlayerRegistration> </PlayerRegistration>
-    <CompetitionRegistration v-if="!currentCompetition" v-on:register="register">
+    <PlayerRegistration v-on:registered="registerPlayer"> </PlayerRegistration>
+    <CompetitionRegistration v-if="!currentCompetition" v-on:register="register" v-bind:players="playersRegistered"  >
     </CompetitionRegistration>
 
     <Competition v-if="currentCompetition" v-bind:laps-count="currentCompetition.lapsCount"
