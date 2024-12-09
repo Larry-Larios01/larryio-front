@@ -30,8 +30,9 @@ export default defineComponent({
             players: []
         })
         function addPlayer() {
-            competition.players.push({ name: "" })
+            competition.players.push({ name: "", podium: { place1: 0, place2: 0, place3: 0 },})
         }
+        console.log(props.players)
 
         function save() {
             const payload = toRaw(competition)
@@ -65,12 +66,11 @@ export default defineComponent({
 
 
         <div>
-            <div v-for="(player, index) in players" v-bind:key="index">
-                <label>
-                    <input type="checkbox" >
-                </label>
-                Player {{ player.name }}
-            </div>
+            <select name="players-registered" id="pr">
+                <option v-for="player in players" :key="player.name" :value="player.name">
+                    {{ player.name }}
+                </option>
+            </select>
         </div>
         <button type="submit">Save</button>
     </form>
