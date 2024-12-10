@@ -68,7 +68,7 @@ export default defineComponent({
     </CompetitionRegistration>
 
 
-    <button v-on:click="startCareerbtn">add new competition</button>
+    <button v-on:click="startCareerbtn">start career</button>
 
     <div v-for="current in listCompetition">
       <Competition v-if="startCareer" v-bind:laps-count="current.lapsCount"
