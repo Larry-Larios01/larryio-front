@@ -16,7 +16,8 @@ export default defineComponent({
     const currentCompetition = ref<CompetitionT>()
     const listCompetition = ref<CompetitionT[]>([]);
     const playersRegistered = ref<Player[]>([]);
-      const podiumPLayers = ref<PodiumPLayer[]>([]);
+    const podiumPlayers = ref<PodiumPLayer[]>([]);
+
 
 
     const results = ref<Results[]>([]);
@@ -42,20 +43,32 @@ export default defineComponent({
     }
 
 
-    function podiumFinal(podium: Results[]){
-      results.value = podium
+    function podiumFinal(podium: Results[]) {
+      results.value = podium;
 
       results.value.forEach((player, index) => {
-  
-  const existingPlayer = podiumPlayers.find(
-    (podiumPlayer) => podiumPlayer.name === player.name
-  );
+        const existingPlayer = podiumPlayers.value.find(
+          (podiumPlayer) => podiumPlayer.name === player.player.name
+        );
 
-      console.log("values ya en padre", results.value)
+        if (!existingPlayer) {
+          const newPodium = {
+            name: player.player.name,
+            podium: {
+              place1: index === 0 ? 1 : 0,
+              place2: index === 1 ? 1 : 0,
+              place3: index === 2 ? 1 : 0,
+            },
+          };
+          podiumPlayers.value.push(newPodium);
+        } else {
+          if (index === 0) existingPlayer.podium.place1 += 1;
+          if (index === 1) existingPlayer.podium.place2 += 1;
+          if (index === 2) existingPlayer.podium.place3 += 1;
+        }
+      });
 
-
-      
-
+      console.log("Updated podium players:", podiumPlayers.value);
     }
 
     return {
@@ -69,7 +82,8 @@ export default defineComponent({
       listCompetition,
       startCareer,
       startCareerbtn,
-      podiumFinal
+      podiumFinal,
+      podiumPlayers
     }
   }
 })
@@ -96,8 +110,12 @@ export default defineComponent({
       <Competition v-if="startCareer" v-bind:laps-count="current.lapsCount"
       v-bind:players="current.players" v-on:podiumFinal="podiumFinal"></Competition>
     </div>
+    Podium Global
+   <div v-for="pplayer in podiumPlayers">
+    {{ pplayer }} 
 
-   
+
+   </div>
   </main>
 </template>
 
