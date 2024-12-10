@@ -97,7 +97,7 @@ export default defineComponent({
         </div>
         podium:
 
-        <ul v-for="result in results"> {{ result}}</ul>
+        <ul v-for="result in results"> {{ result.player.name}}</ul>
         
         
 

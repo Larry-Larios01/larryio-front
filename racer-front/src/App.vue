@@ -112,7 +112,12 @@ export default defineComponent({
     </div>
     Podium Global
    <div v-for="pplayer in podiumPlayers">
-    {{ pplayer }} 
+    {{ pplayer.name }} 
+    first place={{ pplayer.podium.place1 }}
+
+    second place={{ pplayer.podium.place2 }}
+
+    third place ={{ pplayer.podium.place3 }}
 
 
    </div>
