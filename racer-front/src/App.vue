@@ -2,7 +2,7 @@
 import { defineComponent, ref } from "vue"
 import Competition from "./components/Competition.vue"
 import CompetitionRegistration from "./components/CompetitionRegistration.vue";
-import type { Competition as CompetitionT, Player } from "./models";
+import type { Competition as CompetitionT, Player, Results, PodiumPLayer } from "./models";
 import PlayerRegistration from "./components/PlayerRegistration.vue";
 export default defineComponent({
   name: "App",
@@ -16,6 +16,10 @@ export default defineComponent({
     const currentCompetition = ref<CompetitionT>()
     const listCompetition = ref<CompetitionT[]>([]);
     const playersRegistered = ref<Player[]>([]);
+      const podiumPLayers = ref<PodiumPLayer[]>([]);
+
+
+    const results = ref<Results[]>([]);
     const isVisiblecompetitionRegistration = ref(false);
     const startCareer = ref(false);
     function register(competion: CompetitionT) {
@@ -37,6 +41,23 @@ export default defineComponent({
       isVisiblecompetitionRegistration.value = true
     }
 
+
+    function podiumFinal(podium: Results[]){
+      results.value = podium
+
+      results.value.forEach((player, index) => {
+  
+  const existingPlayer = podiumPlayers.find(
+    (podiumPlayer) => podiumPlayer.name === player.name
+  );
+
+      console.log("values ya en padre", results.value)
+
+
+      
+
+    }
+
     return {
       hello,
       register,
@@ -47,7 +68,8 @@ export default defineComponent({
       createNewCompettiionregistration,
       listCompetition,
       startCareer,
-      startCareerbtn
+      startCareerbtn,
+      podiumFinal
     }
   }
 })
@@ -72,7 +94,7 @@ export default defineComponent({
 
     <div v-for="current in listCompetition">
       <Competition v-if="startCareer" v-bind:laps-count="current.lapsCount"
-      v-bind:players="current.players"></Competition>
+      v-bind:players="current.players" v-on:podiumFinal="podiumFinal"></Competition>
     </div>
 
    

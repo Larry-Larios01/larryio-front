@@ -3,6 +3,12 @@ export type Player = {
 }
 
 
+export type PodiumPLayer = {
+
+    name: string
+    podium: Record<string, number>
+}
+
 
 
 export type Competition = {

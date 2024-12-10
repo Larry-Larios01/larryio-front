@@ -51,7 +51,7 @@ export default defineComponent({
 
       if (!evaluate()){
 
-        result.laps = numbers.result
+        result.laps = numbers.value
 
         emit('finished', result)
 
