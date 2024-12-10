@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import type { Competition } from "@/models";
-import { defineComponent, reactive, toRaw , PropType, ref} from "vue";
+import { defineComponent, reactive, toRaw , PropType, ref, onMounted} from "vue";
 import type { Player } from "@/models";
 
 
@@ -24,25 +24,36 @@ export default defineComponent({
         
     },
     setup(props, ctx) {
+
+         console.log("Players received in CompetitionRegistration:", props.players);
         const competition = reactive<Competition>({
             name: "",
             lapsCount: 0,
             players: []
         })
 
-        const checkedNames = ref<Player[]>([]); 
-       
+        
+        const checkedNames = ref<Player>({ name: "" });
+        const playersT = ref<Player[]>([]);
 
         function save() {
-            competition.players = checkedNames.value
+            competition.players = playersT.value
             const payload = toRaw(competition)
             ctx.emit("register", payload)
+        };
+        function addPlayer(){
+            playersT.value.push(checkedNames.value)
+            checkedNames.value = {name: ""}
+
         }
+
+    
 
         return {
             competition,
             save,
-            checkedNames
+            checkedNames, 
+            addPlayer
         }
     }
 })
@@ -63,13 +74,18 @@ export default defineComponent({
                 <input type="number" name="laps" v-model="competition.lapsCount">
             </label>
         </div>
+        <div>
+            <select v-model="checkedNames">
+            <option v-for="player in players" v-bind:value="player">
+             {{ player.name}}
+            </option>
+            </select>
 
-
-        <div v-for="player in players">
-            <input type="checkbox" v-bind:value="player" v-bind:id="player.name" v-model="checkedNames">
-            <label >{{ player.name }}</label>
         </div>
+        
+    
         <button type="submit">Save</button>
+        <button  v-on:click="addPlayer">addPlayer</button>
     </form>
 
 </template>

@@ -1,29 +1,31 @@
 <script lang="ts">
-import { onMounted, PropType, reactive } from 'vue';
+import { onMounted, PropType, reactive, toRaw } from 'vue';
 import { ref, defineComponent } from 'vue';
 import type {Player, Results} from '@/models';
 
 export default defineComponent({
   name: 'PlayerRegistration',
 
-  emits: ['registered'],
+  emits: {
+    registered(payload: Player[]) {
+        return Array.isArray(payload) &&
+        payload.every(player => typeof player.name === "string");
+    }
+},
 
 
-  setup(props, {emit}) { 
+  setup(props, ctx) { 
  
         const players = ref<Player[]>([]);
         function addPlayer() {
-            players.value.push({ name: "", podium: { place1: 0, place2: 0, place3: 0 }, })
+            players.value.push({ name: ""})
         }
 
         function save(){
-            emit('registered', players)
+            const payload = toRaw(players.value)
+            ctx.emit("registered", payload)
 
         }
-
-
-
-
         return {
             addPlayer,
             players,

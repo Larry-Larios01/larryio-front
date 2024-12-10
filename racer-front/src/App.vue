@@ -21,6 +21,7 @@ export default defineComponent({
 
     function registerPlayer(players: Player[]){
       playersRegistered.value = players
+      console.log("Players registered:", playersRegistered.value);
     }
 
     return {
@@ -40,8 +41,9 @@ export default defineComponent({
 
   <main>
     <div>Hello {{ hello }}</div>
+
     <PlayerRegistration v-on:registered="registerPlayer"> </PlayerRegistration>
-    <CompetitionRegistration v-if="!currentCompetition" v-on:register="register" v-bind:players="playersRegistered.value"  >
+    <CompetitionRegistration v-if="!currentCompetition" v-on:register="register" v-bind:players="playersRegistered"  >
     </CompetitionRegistration>
 
     <Competition v-if="currentCompetition" v-bind:laps-count="currentCompetition.lapsCount"
