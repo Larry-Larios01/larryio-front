@@ -35,6 +35,8 @@ export default defineComponent({
         
         const checkedNames = ref<Player>({ name: "" });
         const playersT = ref<Player[]>([]);
+        const playersO = ref<Player[]>(props.players);
+        const removeChecker = ref<Player>({ name: "" });
 
         function save() {
             competition.players = playersT.value
@@ -43,7 +45,14 @@ export default defineComponent({
         };
         function addPlayer(){
             playersT.value.push(checkedNames.value)
+            playersO.value = playersO.value.filter(item => item !== checkedNames.value);
             checkedNames.value = {name: ""}
+        }
+
+        function removePlayer(){
+            playersO.value.push(removeChecker.value)
+            playersT.value = playersT.value.filter(item => item !== removeChecker.value);
+            removeChecker.value = {name: ""}
 
         }
 
@@ -54,7 +63,10 @@ export default defineComponent({
             save,
             checkedNames, 
             addPlayer,
-            playersT
+            playersT,
+            playersO,
+            removeChecker,
+            removePlayer
         }
     }
 })
@@ -77,7 +89,7 @@ export default defineComponent({
         </div>
         <div>
             <select v-model="checkedNames">
-            <option v-for="player in players" v-bind:value="player">
+            <option v-for="player in playersO" v-bind:value="player">
              {{ player.name}}
             </option>
             </select>
@@ -85,13 +97,14 @@ export default defineComponent({
         </div>
         
         <button type="button"  v-on:click="addPlayer">addPlayer</button>
-        <div v-for="player in playersT">
-        <ul>
-            <li>{{ player.name }}</li>
-
-        </ul>
-        
+        <div>
+            <select v-model="removeChecker">
+            <option v-for="player in playersT" v-bind:value="player">
+             {{ player.name}}
+            </option>
+            </select>
         </div>
+        <button type="button"  v-on:click="removePlayer">Remove Player</button>
         <button type="submit">Save</button>
         
     </form>
