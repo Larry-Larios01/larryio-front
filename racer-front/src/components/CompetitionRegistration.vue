@@ -53,7 +53,8 @@ export default defineComponent({
             competition,
             save,
             checkedNames, 
-            addPlayer
+            addPlayer,
+            playersT
         }
     }
 })
@@ -83,9 +84,18 @@ export default defineComponent({
 
         </div>
         
-    
+        <button type="button"  v-on:click="addPlayer">addPlayer</button>
+        <div v-for="player in playersT">
+        <ul>
+            <li>{{ player.name }}</li>
+
+        </ul>
+        
+        </div>
         <button type="submit">Save</button>
-        <button  v-on:click="addPlayer">addPlayer</button>
+        
     </form>
+
+    
 
 </template>
