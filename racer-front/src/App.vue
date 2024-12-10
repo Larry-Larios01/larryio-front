@@ -14,14 +14,27 @@ export default defineComponent({
   setup() {
     const hello = ref("world")
     const currentCompetition = ref<CompetitionT>()
+    const listCompetition = ref<CompetitionT[]>([]);
     const playersRegistered = ref<Player[]>([]);
+    const isVisiblecompetitionRegistration = ref(false);
+    const startCareer = ref(false);
     function register(competion: CompetitionT) {
       currentCompetition.value = competion
+      listCompetition.value.push(currentCompetition.value)
+      isVisiblecompetitionRegistration.value = false
+    }
+
+    function startCareerbtn(){
+      startCareer.value = true
+
     }
 
     function registerPlayer(players: Player[]){
       playersRegistered.value = players
-      console.log("Players registered:", playersRegistered.value);
+    }
+
+    function createNewCompettiionregistration(){
+      isVisiblecompetitionRegistration.value = true
     }
 
     return {
@@ -29,7 +42,12 @@ export default defineComponent({
       register,
       currentCompetition,
       registerPlayer,
-      playersRegistered
+      playersRegistered,
+      isVisiblecompetitionRegistration,
+      createNewCompettiionregistration,
+      listCompetition,
+      startCareer,
+      startCareerbtn
     }
   }
 })
@@ -43,11 +61,21 @@ export default defineComponent({
     <div>Hello {{ hello }}</div>
 
     <PlayerRegistration v-on:registered="registerPlayer"> </PlayerRegistration>
-    <CompetitionRegistration v-if="!currentCompetition" v-on:register="register" v-bind:players="playersRegistered"  >
+
+
+    <button v-on:click="createNewCompettiionregistration">add new competition</button>
+    <CompetitionRegistration v-if="isVisiblecompetitionRegistration " v-on:register="register" v-bind:players="playersRegistered"  >
     </CompetitionRegistration>
 
-    <Competition v-if="currentCompetition" v-bind:laps-count="currentCompetition.lapsCount"
-      v-bind:players="currentCompetition.players"></Competition>
+
+    <button v-on:click="startCareerbtn">add new competition</button>
+
+    <div v-for="current in listCompetition">
+      <Competition v-if="startCareer" v-bind:laps-count="current.lapsCount"
+      v-bind:players="current.players"></Competition>
+    </div>
+
+   
   </main>
 </template>
 
