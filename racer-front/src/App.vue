@@ -29,6 +29,7 @@ export default defineComponent({
       currentCompetition.value = competion
       listCompetition.value.push(currentCompetition.value)
       isVisiblecompetitionRegistration.value = false
+      isVisiblestartCompetition.value = true
     }
 
     function startCareerbtn(){
@@ -146,8 +147,15 @@ export default defineComponent({
       <Competition v-if="isVisiblestartCompetition" v-bind:laps-count="current.lapsCount"
       v-bind:players="current.players" v-on:podiumFinal="podiumFinal"></Competition>
     </div>
-    Podium Global
-   <div v-for="pplayer in podiumPlayers">
+
+    
+    
+   
+  </main>
+
+  <div class="global-podium">
+      <p>Global podium</p>
+      <div v-for="pplayer in podiumPlayers">
     {{ pplayer.name }} 
     first place={{ pplayer.podium.place1 }}
 
@@ -157,7 +165,9 @@ export default defineComponent({
 
 
    </div>
-  </main>
+
+
+    </div>
 
     
 </div>
@@ -214,6 +224,11 @@ grid-column-start: 2;
       color: #ffdd00;
       transform: scale(1.1); 
     }
+
+  .global-podium{
+   grid-column-start: 2;
+   grid-row-start: 2;
+  }
 
 
 </style>

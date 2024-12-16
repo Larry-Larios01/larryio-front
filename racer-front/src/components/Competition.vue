@@ -4,8 +4,7 @@ import { defineComponent, ref, toRaw } from "vue"
 import type { PropType } from "vue";
 import type { Player, Results } from "@/models";
 import Cronometer from "./Cronometer.vue";
-import { Key } from "readline";
-import { EmitFlags } from "typescript";
+
 
 
 
@@ -37,7 +36,7 @@ export default defineComponent({
         }
     },
     setup(props, ctx) {
-        const  competitionStarted : boolean = ref(false);
+        const  competitionStarted = ref(false);
         const results = ref<Results[]>([]);
         function startCompetition(){
             competitionStarted.value = true
@@ -65,7 +64,8 @@ export default defineComponent({
 
 <template>
 
-    <div>
+    <div class="main-container">
+        <div>
         Players:
         <ul v-for="player in players">
             <li>{{ player.name }}</li>
@@ -95,12 +95,64 @@ export default defineComponent({
 
 
         </div>
-        podium:
-
-        <ul v-for="result in results"> {{ result.player.name}}</ul>
         
         
 
     </div>
+    
+    
+    
+    </div>
+    
+
+    
 
 </template>
+
+
+<style scoped>
+.main-container{
+    display: flex;
+        justify-content: center;
+        align-items: center;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      gap: 10px;
+      flex-direction: column
+
+
+}  
+
+.main-container button{
+
+    text-decoration: none;
+  margin: 50px 10px;
+  color: black;
+  border: 0;
+  background-color:  #f9f9f9;  
+  padding: 4px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+
+
+}
+
+.main-container li{
+
+    padding: 8px 10px;
+      margin-bottom: 5px;
+      background-color: #e9f5ff;
+      border-radius: 5px;
+      color: #007bff;
+      display: flex;
+      align-items: center;
+}
+
+
+
+</style>

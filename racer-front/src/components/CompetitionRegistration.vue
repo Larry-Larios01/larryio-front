@@ -75,6 +75,7 @@ export default defineComponent({
 
 <template>
     <form v-on:submit.prevent="save">
+        <p>Create a competition</p>
 
         <div>
             <label>Name:
@@ -112,3 +113,52 @@ export default defineComponent({
     
 
 </template>
+
+
+<style scoped>
+
+form{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      width: 400px;
+      height: auto;
+      margin: 20px auto;
+      flex-direction: column;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      gap: 10px;
+
+}
+form button{
+  text-decoration: none;
+  margin: 0 10px;
+  color: black;
+  border: 0;
+  background-color:  #f9f9f9;  
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+
+}
+
+form button:hover {
+      background-color: #0056b3;
+      color: #ffdd00;
+      transform: scale(1.1); 
+    }
+
+form select{
+    width: 100%;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background-color: white;
+      font-size: 16px;
+      color: #333;
+}
+
+</style>

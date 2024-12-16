@@ -65,12 +65,34 @@ form{
         align-items: center;
       max-width: 400px;
       margin: 20px auto;
-      padding: 20px;
+      padding: 10px;
       border: 1px solid #ddd;
       border-radius: 10px;
       background-color: #f9f9f9;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      gap: 10px;
 
+}
+form button{
+    text-decoration: none;
+  margin: 50px 10px;
+  color: black;
+  border: 0;
+  background-color:  #f9f9f9;  
+  padding: 4px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+
+}
+
+form button:hover {
+      background-color: #0056b3;
+      color: #ffdd00;
+      transform: scale(1.1); 
+    }
+
+form input{
+    padding: 10px,10px, 10px, 10px ;
 }
 
 

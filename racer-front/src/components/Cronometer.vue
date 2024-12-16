@@ -79,13 +79,77 @@ export default defineComponent({
 </script>
 
 <template>
-    <button v-on:click="pause">pause</button>
+  <div class="main-container">
+    <div class="btns">
+
+      <button v-on:click="pause">pause</button>
     <button v-on:click="stop"> stop </button>
     <button v-if="evaluate()" @click="lap">lap</button>
+
+
+    </div>
+    
     <p>{{ count }}</p>
 
     <li v-for="lap in numbers">
         {{ lap }}
     </li>   
 
+
+  </div>
+    
+
 </template>
+
+
+<style scoped>
+
+.main-container{
+    display: flex;
+        justify-content: center;
+        align-items: center;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      gap: 10px;
+      flex-direction: column
+
+
+}  
+
+.main-container button{
+
+    text-decoration: none;
+  margin: 50px 10px;
+  color: black;
+  border: 0;
+  background-color:  #f9f9f9;  
+  padding: 4px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+
+
+}
+
+.btns{
+  display: flex;
+  flex-direction: row;
+}
+
+
+.main-container li{
+  padding: 8px 10px;
+      margin-bottom: 5px;
+      background-color: #e9f5ff;
+      border-radius: 5px;
+      color: #007bff;
+      display: flex;
+      align-items: center;
+}
+
+
+</style>
