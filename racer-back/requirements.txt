@@ -1,2 +1,4 @@
 starlette==0.42.0
 uvicorn==0.34.0
+python-dotnev==1.0.1
+pydantic==2.10.3
