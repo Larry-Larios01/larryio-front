@@ -17,6 +17,8 @@ from psycopg import AsyncRawCursor
 load_dotenv(verbose=True)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+print(DATABASE_URL)
+
 async def get_connection():
     return await psycopg.AsyncConnection.connect(DATABASE_URL, row_factory=dict_row, cursor_factory= AsyncRawCursor)
 
@@ -28,35 +30,38 @@ class User(BaseModel):
     id: UUID4
     name:str
 
-def from_req_insert_user(request: Request)-> User:
+async def from_req_insert_user(request: Request)-> User:
     uuid4 = uuid.uuid4()
-    data = request.json()
+    data =  await request.json()
+    print(data)
     contact = User(id=uuid4,name=data["name"])
     return contact
 
-async def insert_user_handler(params: User)-> uuid:
-    conn = await get_connection()
+async def insert_user_handler(params: User, conn)-> uuid:
+   
     async with conn.cursor() as c:
             result = await c.execute(
                 "INSERT INTO users (id, name) VALUES ($1, $2) RETURNING id, name",
-                [params["id"], params["name"]]
+                [params.id, params.name]
                     )
             user = await result.fetchone()
             user_created = User(id=user["id"],name=user['name'])
     await conn.close()
+    print(user_created.name)
             
     return user_created
 
 
 def to_res_insert_user(user: User)-> JSONResponse:
      return JSONResponse({
-        "id": f"{user["id"]}",
+        "id": f"{user.id}",
         "message": "was succesful inserted"
     })
 
 async def insert_user(request: Request):
-    params = from_req_insert_user(request)
-    result = await insert_user_handler(params)
+    params =  await from_req_insert_user(request)
+    conn = await get_connection()
+    result = await insert_user_handler(params, conn)
     return to_res_insert_user(result)
         
 
@@ -64,7 +69,7 @@ async def insert_user(request: Request):
 
 
 routes = [
-    Route("/contacts", endpoint=insert_user, methods=["POST"])
+    Route("/Player/", endpoint=insert_user, methods=["POST"])
 ]
 
 
