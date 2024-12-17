@@ -3,7 +3,7 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route
 from dotenv import load_dotenv
 import uuid
-
+import json
 from pydantic import BaseModel, UUID4
 import os
 import uvicorn
@@ -45,8 +45,9 @@ async def insert_user_handler(params: User, conn)-> uuid:
                 [params.id, params.name]
                     )
             user = await result.fetchone()
+            print(user)
             user_created = User(id=user["id"],name=user['name'])
-    await conn.close()
+    await conn.commit()
     print(user_created.name)
             
     return user_created
@@ -63,13 +64,47 @@ async def insert_user(request: Request):
     conn = await get_connection()
     result = await insert_user_handler(params, conn)
     return to_res_insert_user(result)
+
+
+
+async def get_users_handler(conn)-> User:
+    players: list[User] = []
+    conn = await get_connection()
+    async with conn.transaction():
+            restult = await conn.execute("SELECT * FROM users")
+            users = await restult.fetchall()
+            for user in users:
+                player = User(id=user["id"],name=user["name"])
+                players.append(player)
+
+
+                  
+           
+    await conn.close()
+    return players
+
+
+def to_res_get_users(users: list[User])-> JSONResponse:
+     user_serialized = [user.model_dump_json(indent=2) for user in users]
+     print(user_serialized)
+     return JSONResponse(user_serialized)
+
+
+
+async def get_users(request: Request):
+    conn = await get_connection()
+    
+    result = await get_users_handler(conn)
+    return to_res_get_users(result)
+
         
 
 
 
 
 routes = [
-    Route("/Player/", endpoint=insert_user, methods=["POST"])
+    Route("/Player/", endpoint=insert_user, methods=["POST"]),
+    Route("/Player/", endpoint=get_users, methods=["GET"])
 ]
 
 
