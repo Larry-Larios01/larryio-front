@@ -92,7 +92,7 @@ async def get_users_handler(conn)-> User:
 
 
 def to_res_get_users(users: list[User])-> JSONResponse:
-     user_serialized = [user.model_dump_json(indent=2) for user in users]
+     user_serialized = [user.model_dump(mode="json") for user in users]
      print(user_serialized)
      return JSONResponse(user_serialized)
 

@@ -66,7 +66,7 @@ export default defineComponent({
             users.value = allusers
             console.log("ojala si tenga", users.value)
             console.log("allusers", allusers)
-            for (const player of users.value){
+            for (const player of allusers){
                 console.log("jugador",player.name)
                 playersO.value.push({id:player.id, name:player.name})
             }
