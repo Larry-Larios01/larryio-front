@@ -3,7 +3,6 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route
 from dotenv import load_dotenv
 import uuid
-import json
 from pydantic import BaseModel, UUID4
 import os
 import uvicorn
@@ -29,6 +28,11 @@ async def get_connection():
 class User(BaseModel):
     id: UUID4
     name:str
+
+class Competition(BaseModel):
+    id: UUID4
+    name: str
+    players: list[UUID4]
 
 async def from_req_insert_user(request: Request)-> User:
     uuid4 = uuid.uuid4()
@@ -97,6 +101,50 @@ async def get_users(request: Request):
     result = await get_users_handler(conn)
     return to_res_get_users(result)
 
+
+
+async def from_req_insert_competition(request: Request)-> Competition:
+    uuid4 = uuid.uuid4()
+    data =  await request.json()
+    players = [uuid.UUID(player) for player in data["players"]]
+    print(players)
+    competition = Competition(id=uuid4,name=data["name"], players=players )
+    return competition
+
+async def insert_competition_handler(params: Competition, conn)-> uuid:
+   
+    async with conn.cursor() as c:
+            result = await c.execute(
+                "INSERT INTO competition (id, name) VALUES ($1, $2) RETURNING id, name",
+                [params.id, params.name]
+                    )
+            comp = await result.fetchone()
+            print(comp)
+            competition = Competition(id=comp["id"],name=comp['name'], players=params.players)
+
+            for user in params.players:
+                  await c.execute(
+                "INSERT INTO competitionMaster (id_player, id_competition) VALUES ($1, $2) ",
+                [user, competition.id]
+                    )
+            
+    await conn.commit()
+            
+    return competition.id
+
+
+def to_res_insert_competition(comp_id: uuid)-> JSONResponse:
+     return JSONResponse({
+        "id": f"{comp_id}",
+        "message": "was succesful inserted"
+    })
+
+async def insert_competition(request: Request):
+    params =  await from_req_insert_competition(request)
+    conn = await get_connection()
+    result = await insert_competition_handler(params, conn)
+    return to_res_insert_competition(result)
+
         
 
 
@@ -104,7 +152,8 @@ async def get_users(request: Request):
 
 routes = [
     Route("/Player/", endpoint=insert_user, methods=["POST"]),
-    Route("/Player/", endpoint=get_users, methods=["GET"])
+    Route("/Player/", endpoint=get_users, methods=["GET"]),
+    Route("/Competition/", endpoint=insert_competition, methods=["POST"]),
 ]
 
 
