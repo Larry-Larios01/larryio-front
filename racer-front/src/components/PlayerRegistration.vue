@@ -10,7 +10,7 @@ export default defineComponent({
   emits: {
     registered(payload: Player[]) {
         return Array.isArray(payload) &&
-        payload.every(player => typeof player.name === "string");
+        payload.every(player => typeof player.name === "string" );
     }
 },
 
@@ -19,7 +19,7 @@ export default defineComponent({
  
         const players = ref<Player[]>([]);
         function addPlayer() {
-            players.value.push({ name: ""})
+            players.value.push({ id: "", name: ""})
         }
 
         async function save(){

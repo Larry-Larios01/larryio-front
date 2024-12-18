@@ -3,6 +3,7 @@
 import type { Competition } from "@/models";
 import { defineComponent, reactive, toRaw , PropType, ref, onMounted} from "vue";
 import type { Player } from "@/models";
+import {CompetitionClientFetch} from '@/client'
 
 
 export default defineComponent({
@@ -31,13 +32,15 @@ export default defineComponent({
             lapsCount: 0,
             players: []
         })
+        
+        const users = ref<{ id: string; name: string }[]>([]);
+        const checkedNames = ref<Player>({ id: "",name: "" });
+        const playersT = ref<Player[]>([]);
+        const playersO = ref<Player[]>([]);
+        const removeChecker = ref<Player>({ id: "", name: "" });
 
         
-        const checkedNames = ref<Player>({ name: "" });
-        const playersT = ref<Player[]>([]);
-        const playersO = ref<Player[]>(props.players);
-        const removeChecker = ref<Player>({ name: "" });
-
+        
         function save() {
             competition.players = playersT.value
             const payload = toRaw(competition)
@@ -46,15 +49,38 @@ export default defineComponent({
         function addPlayer(){
             playersT.value.push(checkedNames.value)
             playersO.value = playersO.value.filter(item => item !== checkedNames.value);
-            checkedNames.value = {name: ""}
+            checkedNames.value = {id: "", name: ""}
         }
 
         function removePlayer(){
             playersO.value.push(removeChecker.value)
             playersT.value = playersT.value.filter(item => item !== removeChecker.value);
-            removeChecker.value = {name: ""}
+            removeChecker.value = {id: "", name: ""}
+
 
         }
+
+        async function fetchUsers(){
+            const getUsers = new CompetitionClientFetch()
+            const allusers = await getUsers.getUsers()
+            users.value = allusers
+            console.log("ojala si tenga", users.value)
+            console.log("allusers", allusers)
+            for (const player of users.value){
+                console.log("jugador",player.name)
+                playersO.value.push({id:player.id, name:player.name})
+            }
+          
+            console.log("los valores",playersO.value)
+
+
+        }
+
+        onMounted(() => {
+                fetchUsers();
+        });
+
+        
 
     
 
