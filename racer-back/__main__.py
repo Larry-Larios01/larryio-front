@@ -10,6 +10,7 @@ from starlette.requests import Request
 import psycopg
 from psycopg.rows import dict_row
 from psycopg import AsyncRawCursor
+from starlette.middleware.cors import CORSMiddleware
 
 
 
@@ -198,6 +199,13 @@ routes = [
 
 app = Starlette(
     routes=routes
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir cualquier origen, en producción reemplaza con tu dominio específico
+    allow_methods=["*"],  # Permitir todos los métodos: POST, GET, OPTIONS, etc.
+    allow_headers=["*"],  # Permitir todos los headers
 )
 
 

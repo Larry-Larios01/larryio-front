@@ -2,6 +2,7 @@
 import { onMounted, PropType, reactive, toRaw } from 'vue';
 import { ref, defineComponent } from 'vue';
 import type {Player, Results} from '@/models';
+import {CompetitionClientFetch} from '@/client'
 
 export default defineComponent({
   name: 'PlayerRegistration',
@@ -21,8 +22,14 @@ export default defineComponent({
             players.value.push({ name: ""})
         }
 
-        function save(){
-            alert("the players have been registered succesfully")
+        async function save(){
+            const clientCreateplayer = new CompetitionClientFetch(); 
+            for (const player of players.value){
+                const playerCreated = await clientCreateplayer.createUser(player.name);
+                console.log(`Player is created: ${playerCreated.id}`);
+            }
+          
+
             const payload = toRaw(players.value)
             ctx.emit("registered", payload)
 
