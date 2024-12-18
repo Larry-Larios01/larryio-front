@@ -34,6 +34,10 @@ class Competition(BaseModel):
     name: str
     players: list[UUID4]
 
+
+
+    #the start of the logic of the endpoit insert a user(player)
+
 async def from_req_insert_user(request: Request)-> User:
     uuid4 = uuid.uuid4()
     data =  await request.json()
@@ -71,19 +75,17 @@ async def insert_user(request: Request):
 
 
 
+    #the start of the logic of the endpoit getusers
+
+
 async def get_users_handler(conn)-> User:
     players: list[User] = []
-    conn = await get_connection()
     async with conn.transaction():
             restult = await conn.execute("SELECT * FROM users")
             users = await restult.fetchall()
             for user in users:
                 player = User(id=user["id"],name=user["name"])
-                players.append(player)
-
-
-                  
-           
+                players.append(player)      
     await conn.close()
     return players
 
@@ -97,9 +99,12 @@ def to_res_get_users(users: list[User])-> JSONResponse:
 
 async def get_users(request: Request):
     conn = await get_connection()
-    
     result = await get_users_handler(conn)
     return to_res_get_users(result)
+
+
+
+    #the start of the logic of the endpoit insert a competition
 
 
 
@@ -145,6 +150,38 @@ async def insert_competition(request: Request):
     result = await insert_competition_handler(params, conn)
     return to_res_insert_competition(result)
 
+
+
+    #the start of the logic of the endpoit getthecompetitions
+
+async def get_competitions_handler(conn)-> list[Competition]:
+    competitions: list[Competition] = []
+    async with conn.transaction():
+            restult = await conn.execute("SELECT * FROM competition")
+            comps = await restult.fetchall()
+            for comp in comps:
+                players = await conn.execute("SELECT cm.id_player FROM competition c INNER JOIN competitionMaster cm ON c.id = cm.id_competition WHERE c.id = $1;", [comp["id"]])
+                players_get = await players.fetchall()
+                players_send = [row["id_player"] for row in players_get]
+                competition = Competition(id=comp["id"],name=comp["name"], players=players_send)
+                competitions.append(competition)      
+    await conn.close()
+    return competitions
+
+
+def to_res_get_competitions(comps: list[Competition])-> JSONResponse:
+     user_serialized = [comp.model_dump_json(indent=2) for comp in comps]
+     print(user_serialized)
+     return JSONResponse(user_serialized)
+
+
+
+async def get_competitions(request: Request):
+    conn = await get_connection()
+    result = await get_competitions_handler(conn)
+    return to_res_get_competitions(result)
+
+
         
 
 
@@ -154,6 +191,7 @@ routes = [
     Route("/Player/", endpoint=insert_user, methods=["POST"]),
     Route("/Player/", endpoint=get_users, methods=["GET"]),
     Route("/Competition/", endpoint=insert_competition, methods=["POST"]),
+    Route("/Competition/", endpoint=get_competitions, methods=["GET"]),
 ]
 
 
