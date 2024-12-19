@@ -31,6 +31,7 @@ export default defineComponent({
       listCompetition.value.push(currentCompetition.value)
       isVisiblecompetitionRegistration.value = false
       isVisiblestartCompetition.value = true
+      fetchCompetitions();
     }
 
     function startCareerbtn(){
@@ -103,8 +104,8 @@ export default defineComponent({
             }
         }
 
-        onMounted(() => {
-                fetchCompetitions();
+        onMounted(async () => {
+                await fetchCompetitions();
         });
 
 
