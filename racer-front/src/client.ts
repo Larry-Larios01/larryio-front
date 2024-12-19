@@ -1,3 +1,5 @@
+
+
 interface CompetitionClient  {
     createUser(name: string): Promise<{ id: string; }>
     getUsers(): Promise<{ id: string; name:string }[]>
@@ -8,7 +10,7 @@ interface CompetitionClient  {
   
     async createUser(name: string): Promise<{ id: string; }> {
       // el equivalente a from req
-      const req = new Request("http://0.0.0.0:8000/Player/" , { method: "POST", headers: { "Content-Type": "application/json" },body: JSON.stringify({ name })});
+      const req = new Request("http://0.0.0.0:8000/player/" , { method: "POST", headers: { "Content-Type": "application/json" },body: JSON.stringify({ name })});
       const res = await fetch(req)
       // el equivalente a to res en el back
       const data = await res.json()
@@ -17,12 +19,30 @@ interface CompetitionClient  {
 
     async getUsers(): Promise<{ id: string; name: string}[]> {
         // el equivalente a from req
-        const req = new Request("http://0.0.0.0:8000/Player/" , { method: "GET", headers: { "Content-Type": "application/json" }});
+        const req = new Request("http://0.0.0.0:8000/player/" , { method: "GET", headers: { "Content-Type": "application/json" }});
+        const res = await fetch(req)
+        console.log("the body is", res.body)
+        // el equivalente a to res en el back
+        const data = await res.json()
+        return data
+      }
+    async createCompetition(name: string, laps: number, players: string[] ): Promise<{ id: string; }> {
+
+
+      const body = {
+        name: name,
+        laps: laps,
+        players: players
+      };
+        // el equivalente a from req
+        const req = new Request("http://0.0.0.0:8000/competition/" , { method: "POST", headers: { "Content-Type": "application/json" },body: JSON.stringify({ body})});
         const res = await fetch(req)
         // el equivalente a to res en el back
         const data = await res.json()
         return data
       }
+
+    
   }
 
 

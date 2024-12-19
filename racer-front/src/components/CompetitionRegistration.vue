@@ -41,8 +41,12 @@ export default defineComponent({
 
         
         
-        function save() {
+        async function save() {
             competition.players = playersT.value
+            const clientCreateplayer = new CompetitionClientFetch(); 
+            const competitionCreated = await clientCreateplayer.createCompetition(competition);
+            console.log(`Player is created: ${competitionCreated.id}`);
+    
             const payload = toRaw(competition)
             ctx.emit("register", payload)
         };
