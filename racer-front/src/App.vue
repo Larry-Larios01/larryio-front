@@ -1,9 +1,10 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent, ref, onMounted } from "vue"
 import Competition from "./components/Competition.vue"
 import CompetitionRegistration from "./components/CompetitionRegistration.vue";
-import type { Competition as CompetitionT, Player, Results, PodiumPLayer } from "./models";
+import type { Competition as CompetitionT, Player, Results, PodiumPLayer, CompetitionStarted } from "./models";
 import PlayerRegistration from "./components/PlayerRegistration.vue";
+import {CompetitionClientFetch} from '@/client'
 export default defineComponent({
   name: "App",
   components: {
@@ -17,7 +18,7 @@ export default defineComponent({
     const listCompetition = ref<CompetitionT[]>([]);
     const playersRegistered = ref<Player[]>([]);
     const podiumPlayers = ref<PodiumPLayer[]>([]);
-
+    const comps = ref<CompetitionStarted[]>([]);
 
 
     const results = ref<Results[]>([]);
@@ -94,6 +95,19 @@ export default defineComponent({
       console.log("Updated podium players:", podiumPlayers.value);
     }
 
+    async function fetchCompetitions(){
+            const getCompetitions = new CompetitionClientFetch()
+            const allCompetitions = await getCompetitions.getCompetitions()
+            for (const comp of allCompetitions){
+                comps.value.push({id: comp.id , name:comp.name, lapsCount: comp.laps, players: comp.players })
+            }
+        }
+
+        onMounted(() => {
+                fetchCompetitions();
+        });
+
+
     return {
       hello,
       register,
@@ -111,7 +125,8 @@ export default defineComponent({
       isVisiblestartCompetition,
       showCreateplayer,
       showCreatecompetition,
-      showStartcompetition
+      showStartcompetition,
+      comps
     }
   }
 })
@@ -143,9 +158,8 @@ export default defineComponent({
 
   
 
-    <div v-for="current in listCompetition">
-      <Competition v-if="isVisiblestartCompetition" v-bind:laps-count="current.lapsCount"
-      v-bind:players="current.players" v-on:podiumFinal="podiumFinal"></Competition>
+    <div v-for="comp in comps">
+      <Competition v-if="isVisiblestartCompetition" v-bind:competitionProp="comp" v-on:podiumFinal="podiumFinal"></Competition>
     </div>
 
     

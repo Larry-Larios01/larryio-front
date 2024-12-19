@@ -1,9 +1,10 @@
 <script lang="ts">
 
-import { defineComponent, ref, toRaw } from "vue"
+import { defineComponent, ref, toRaw, onMounted } from "vue"
 import type { PropType } from "vue";
-import type { Player, Results } from "@/models";
+import type { Competition, Player, Results, CompetitionStarted } from "@/models";
 import Cronometer from "./Cronometer.vue";
+import {CompetitionClientFetch} from '@/client'
 
 
 
@@ -26,18 +27,15 @@ export default defineComponent({
   }
 },
     props: {
-        players: {
-            type: Object as PropType<Player[]>,
+        competitionProp: {
+            type: Object as PropType<CompetitionStarted>,
             required: true,
-        },
-        lapsCount: {
-            type: Number,
-            required: true
         }
     },
     setup(props, ctx) {
         const  competitionStarted = ref(false);
         const results = ref<Results[]>([]);
+        const comps = ref<CompetitionStarted[]>([]);
         function startCompetition(){
             competitionStarted.value = true
 
@@ -45,6 +43,7 @@ export default defineComponent({
 
         function handlerFinished(resultt: Results){
 
+        
             results.value.push(resultt)
 
             console.log(results.value.length)
@@ -56,7 +55,9 @@ export default defineComponent({
             }
 
         }
-        return { competitionStarted, startCompetition, handlerFinished, results}
+
+        
+        return { competitionStarted, startCompetition, handlerFinished, results, comps}
     }
 })
 
@@ -66,7 +67,7 @@ export default defineComponent({
 
     <div class="main-container">
         <div>
-        Players:
+        
         <ul v-for="player in players">
             <li>{{ player.name }}</li>
         </ul>

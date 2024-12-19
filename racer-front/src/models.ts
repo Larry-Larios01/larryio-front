@@ -18,6 +18,13 @@ export type Competition = {
     players: string[]
 }
 
+export type CompetitionStarted = {
+    id: string
+    name: string
+    lapsCount: number
+    players: string[]
+}
+
 export type CompetitonCompleted = {
     podium: Player[]
     laps: Record<string, number>[]
