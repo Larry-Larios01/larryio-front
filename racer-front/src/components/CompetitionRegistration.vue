@@ -13,8 +13,7 @@ export default defineComponent({
             return typeof payload === "object" &&
                 typeof payload.name === "string" &&
                 typeof payload.lapsCount === "number" &&
-                Array.isArray(payload.players) &&
-                payload.players.every(player => typeof player.name === "string")
+                Array.isArray(payload.players)
         }
     },
     props: {
@@ -38,14 +37,20 @@ export default defineComponent({
         const playersT = ref<Player[]>([]);
         const playersO = ref<Player[]>([]);
         const removeChecker = ref<Player>({ id: "", name: "" });
+        const idPlayers : string[] = []
 
         
         
         async function save() {
-            competition.players = playersT.value
+            for (const player of playersT.value){
+                idPlayers.push(player.id)
+            }
+            
             const clientCreateplayer = new CompetitionClientFetch(); 
-            const competitionCreated = await clientCreateplayer.createCompetition(competition);
-            console.log(`Player is created: ${competitionCreated.id}`);
+            const competitionCreated = await clientCreateplayer.createCompetition(competition.name, competition.lapsCount, idPlayers);
+
+            console.log("created comp:", competitionCreated)
+
     
             const payload = toRaw(competition)
             ctx.emit("register", payload)

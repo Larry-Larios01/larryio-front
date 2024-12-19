@@ -15,7 +15,7 @@ export type PodiumPLayer = {
 export type Competition = {
     name: string
     lapsCount: number
-    players: Player[]
+    players: string[]
 }
 
 export type CompetitonCompleted = {
