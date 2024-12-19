@@ -9,6 +9,7 @@ import {CompetitionClientFetch} from '@/client'
 
 
 
+
 export default defineComponent({
     name: "Competition",
     components: {
@@ -35,7 +36,7 @@ export default defineComponent({
     setup(props, ctx) {
         const  competitionStarted = ref(false);
         const results = ref<Results[]>([]);
-        const comps = ref<CompetitionStarted[]>([]);
+        const players = ref<Player[]>([]);
         function startCompetition(){
             competitionStarted.value = true
 
@@ -55,9 +56,26 @@ export default defineComponent({
             }
 
         }
+        async function fetchUser(){
+            const getUser = new CompetitionClientFetch()
+            for (const player of props.competitionProp.players){
+                const user = await getUser.getUser(player)
+                players.value.push({id:user.id, name:user.name})
+            }
+           
+            
+          
+
+
+
+        }
+
+        onMounted(() => {
+                fetchUser();
+        });
 
         
-        return { competitionStarted, startCompetition, handlerFinished, results, comps}
+        return { competitionStarted, startCompetition, handlerFinished, results, players}
     }
 })
 
@@ -67,13 +85,14 @@ export default defineComponent({
 
     <div class="main-container">
         <div>
+            <p>{{ competitionProp.name }}</p>
         
         <ul v-for="player in players">
-            <li>{{ player.name }}</li>
+            <li>{{ player.name}}</li>
         </ul>
     </div>
     <div>
-        Laps: {{ lapsCount }}
+        Laps: {{ competitionProp.lapsCount}}
     </div>
 
 
@@ -86,7 +105,7 @@ export default defineComponent({
                 <label>{{ player.name }}
 
 
-                    <Cronometer v-bind:laps="lapsCount" v-bind:player="player"  v-on:finished="handlerFinished"></Cronometer>
+                    <Cronometer v-bind:laps="competitionProp.lapsCount" v-bind:player="player"  v-on:finished="handlerFinished"></Cronometer>
                 </label>
 
                 
