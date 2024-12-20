@@ -21,7 +21,7 @@ export default defineComponent({
     const comps = ref<CompetitionStarted[]>([]);
 
 
-    const results = ref<Results[]>([]);
+   
     const isVisiblecompetitionRegistration = ref(false);
     const isVisibleRegisterplayer = ref(false);
     const isVisiblestartCompetition = ref(false);
@@ -68,32 +68,8 @@ export default defineComponent({
 
 
 
-    function podiumFinal(podium: Results[]) {
-      results.value = podium;
-
-      results.value.forEach((player, index) => {
-        const existingPlayer = podiumPlayers.value.find(
-          (podiumPlayer) => podiumPlayer.name === player.player.name
-        );
-
-        if (!existingPlayer) {
-          const newPodium = {
-            name: player.player.name,
-            podium: {
-              place1: index === 0 ? 1 : 0,
-              place2: index === 1 ? 1 : 0,
-              place3: index === 2 ? 1 : 0,
-            },
-          };
-          podiumPlayers.value.push(newPodium);
-        } else {
-          if (index === 0) existingPlayer.podium.place1 += 1;
-          if (index === 1) existingPlayer.podium.place2 += 1;
-          if (index === 2) existingPlayer.podium.place3 += 1;
-        }
-      });
-
-      console.log("Updated podium players:", podiumPlayers.value);
+    async function podiumFinal(podium: Results[]) {
+      await fecthPodiums()
     }
 
     async function fetchCompetitions(){

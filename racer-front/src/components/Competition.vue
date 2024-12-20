@@ -45,18 +45,18 @@ export default defineComponent({
 
         async function handlerFinished(resultt: Player){
 
-        
-            results.value.push(resultt)
-
-            console.log(results.value.length)
-            if(results.value.length == 3){
+            counter = counter+1;
+            if (players.value.length == 2 && counter <= 2){
                 const pushPodium = new CompetitionClientFetch()
-            for (const player of results.value){
-                counter = counter+1
-                const idplayerpodium = await pushPodium.insertPodium(player.id, props.competitionProp.id, counter)
+                const idplayerpodium = await pushPodium.insertPodium(resultt.id, props.competitionProp.id, counter)
                 console.log("id player podium", idplayerpodium)
+
             }
-                
+            if (players.value.length >= 3 && counter <= 3){
+                const pushPodium = new CompetitionClientFetch()
+                const idplayerpodium = await pushPodium.insertPodium(resultt.id, props.competitionProp.id, counter)
+                console.log("id player podium", idplayerpodium)
+
             }
 
         }

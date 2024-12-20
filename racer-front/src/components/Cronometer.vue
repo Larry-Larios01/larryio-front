@@ -6,7 +6,7 @@ import type {Player, Results} from '@/models';
 export default defineComponent({
   name: 'Cronometer',
 
-  emits: ['finished'],
+  emits: ['finished', 'lapFinished'],
   
 
   props: {
