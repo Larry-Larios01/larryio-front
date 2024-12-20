@@ -144,7 +144,7 @@ async def insert_competition_handler(params: Competition, conn)-> uuid:
 
             for user in params.players:
                   await c.execute(
-                "INSERT INTO competitionMaster (id_player, id_competition) VALUES ($1, $2) ",
+                "INSERT INTO competition_master (id_player, id_competition) VALUES ($1, $2) ",
                 [user, competition.id]
                     )
             
@@ -175,7 +175,7 @@ async def get_competitions_handler(conn)-> list[Competition]:
             restult = await conn.execute("SELECT * FROM competition")
             comps = await restult.fetchall()
             for comp in comps:
-                players = await conn.execute("SELECT cm.id_player FROM competition c INNER JOIN competitionMaster cm ON c.id = cm.id_competition WHERE c.id = $1;", [comp["id"]])
+                players = await conn.execute("SELECT cm.id_player FROM competition c INNER JOIN competition_master cm ON c.id = cm.id_competition WHERE c.id = $1;", [comp["id"]])
                 players_get = await players.fetchall()
                 players_send = [row["id_player"] for row in players_get]
                 competition = Competition(id=comp["id"],name=comp["name"], players=players_send, laps=comp["laps"])
@@ -240,7 +240,7 @@ async def insert_podium_handler(params: Podium, conn)-> uuid:
    
     async with conn.cursor() as c:
             result = await c.execute(
-                "UPDATE competitionMaster SET place = $1 WHERE id_player = $2 AND id_competition = $3;",
+                "UPDATE competition_master SET place = $1 WHERE id_player = $2 AND id_competition = $3;",
                 [params.place, params.id_player, params.id_competition]
                     )
     await conn.commit()
@@ -270,7 +270,7 @@ async def get_podiums_handler(conn)-> list[PlayerPodium]:
            COUNT(CASE WHEN place = 1 THEN 1 END) AS first_place,
            COUNT(CASE WHEN place = 2 THEN 1 END) AS second_place,
            COUNT(CASE WHEN place = 3 THEN 1 END) AS third_place
-        FROM competitionMaster c
+        FROM competition_master c
         INNER JOIN users u ON u.id = c.id_player
         GROUP BY u."name", u."id";"""
             restult = await conn.execute(query)
