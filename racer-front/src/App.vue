@@ -104,8 +104,23 @@ export default defineComponent({
             }
         }
 
+     async function fecthPodiums() {
+      const getPodium = new CompetitionClientFetch()
+            const allPodiums = await getPodium.getPodiums()
+            console.log("the all podiums:", allPodiums)
+            for (const pod of allPodiums){
+                if(pod.place1 != 0 || pod.place2 != 0 || pod.place3 != 0){
+                  podiumPlayers.value.push({id: pod.id_player , name:pod.name, place1:pod.place1, place2:pod.place2, place3: pod.place3})
+                }
+                
+            }
+      
+      
+     }
+
         onMounted(async () => {
                 await fetchCompetitions();
+                await fecthPodiums();
         });
 
 
@@ -172,11 +187,11 @@ export default defineComponent({
       <p>Global podium</p>
       <div v-for="pplayer in podiumPlayers">
     {{ pplayer.name }} 
-    first place={{ pplayer.podium.place1 }}
+    <p>first place={{ pplayer.place1 }}</p>
+    <p>second place={{ pplayer.place2 }}</p>
+    <p>third place={{ pplayer.place3 }}</p>
 
-    second place={{ pplayer.podium.place2 }}
 
-    third place ={{ pplayer.podium.place3 }}
 
 
    </div>

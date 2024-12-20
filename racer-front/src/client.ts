@@ -75,6 +75,15 @@ interface CompetitionClient  {
         return data
 
       }
+      async getPodiums(): Promise<{ id_player: string; name: string; place1: number, place2:number, place3: number}[]> {
+        // el equivalente a from req
+        const req = new Request("http://0.0.0.0:8000/podium/" , { method: "GET", headers: { "Content-Type": "application/json" }});
+        const res = await fetch(req)
+        console.log("the body is in podiums", res.body)
+        // el equivalente a to res en el back
+        const data = await res.json()
+        return data
+      }
 
 
 

@@ -42,6 +42,15 @@ class Podium(BaseModel):
     place: int
 
 
+class PlayerPodium(BaseModel):
+    id_player: UUID4
+    name: str
+    place1: int
+    place2: int 
+    place3: int
+
+
+
     #the start of the logic of the endpoit insert a user(player)
 
 async def from_req_insert_user(request: Request)-> User:
@@ -253,6 +262,40 @@ async def insert_podium(request: Request):
     return to_res_insert_podium(result)
 
 
+# the logic to get the all podiums
+async def get_podiums_handler(conn)-> list[PlayerPodium]:
+    podiums_player: list[PlayerPodium] = []
+    async with conn.transaction():
+            query = """  SELECT u."id", u."name",
+           COUNT(CASE WHEN place = 1 THEN 1 END) AS first_place,
+           COUNT(CASE WHEN place = 2 THEN 1 END) AS second_place,
+           COUNT(CASE WHEN place = 3 THEN 1 END) AS third_place
+        FROM competitionMaster c
+        INNER JOIN users u ON u.id = c.id_player
+        GROUP BY u."name", u."id";"""
+            restult = await conn.execute(query)
+            podium = await restult.fetchall()
+            for pod in podium:
+
+                podium_player = PlayerPodium(id_player=pod["id"], name=pod["name"], place1=pod["first_place"], place2=pod["second_place"], place3=pod["third_place"])
+                podiums_player.append(podium_player)      
+    await conn.close()
+    return podiums_player
+
+
+def to_res_get_podiums(pods: list[PlayerPodium])-> JSONResponse:
+     pods_serialized = [pod.model_dump(mode="json") for pod in pods]
+     print("the spected body", pods_serialized)
+     return JSONResponse(pods_serialized)
+
+
+
+async def get_podiums(request: Request):
+    conn = await get_connection()
+    result = await get_podiums_handler(conn)
+    return to_res_get_podiums(result)
+
+
         
 
 
@@ -265,6 +308,7 @@ routes = [
     Route("/competition/", endpoint=insert_competition, methods=["POST"]),
     Route("/competition/", endpoint=get_competitions, methods=["GET"]),
     Route("/podium/", endpoint=insert_podium, methods=["POST"]),
+    Route("/podium/", endpoint=get_podiums, methods=["GET"]),
 ]
 
 

@@ -5,9 +5,11 @@ export type Player = {
 
 
 export type PodiumPLayer = {
-
+    id: string 
     name: string
-    podium: Record<string, number>
+    place1: number
+    place2: number
+    place3: number
 }
 
 
