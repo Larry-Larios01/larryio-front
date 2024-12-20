@@ -35,24 +35,28 @@ export default defineComponent({
     },
     setup(props, ctx) {
         const  competitionStarted = ref(false);
-        const results = ref<Results[]>([]);
+        const results = ref<Player[]>([]);
         const players = ref<Player[]>([]);
+        let counter: number = 0 
         function startCompetition(){
             competitionStarted.value = true
 
         }
 
-        function handlerFinished(resultt: Results){
+        async function handlerFinished(resultt: Player){
 
         
             results.value.push(resultt)
 
             console.log(results.value.length)
             if(results.value.length == 3){
-                const payload = toRaw(results.value)
-                console.log(payload)
-    
-                ctx.emit('podiumFinal', payload)
+                const pushPodium = new CompetitionClientFetch()
+            for (const player of results.value){
+                counter = counter+1
+                const idplayerpodium = await pushPodium.insertPodium(player.id, props.competitionProp.id, counter)
+                console.log("id player podium", idplayerpodium)
+            }
+                
             }
 
         }

@@ -53,7 +53,7 @@ export default defineComponent({
 
         result.laps = numbers.value
 
-        emit('finished', result)
+        emit('finished', props.player)
 
 
       }

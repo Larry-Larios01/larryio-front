@@ -3,6 +3,11 @@
 interface CompetitionClient  {
     createUser(name: string): Promise<{ id: string; }>
     getUsers(): Promise<{ id: string; name:string }[]>
+    createCompetition(name: string, laps: number, players: string[] ): Promise<{ id: string; }>
+    getCompetitions(): Promise<{ id: string; name: string, laps:number, players: string[]}[]>
+    getUser(id:string): Promise<{ id: string; name: string}>
+    insertPodium (id:string, idCompetition: string, place: number): Promise<{id:string}>
+
 
   }
   
@@ -56,6 +61,23 @@ interface CompetitionClient  {
         const data = await res.json()
         return data
       }
+
+      async insertPodium (idPLayer:string, idCompetition: string, place: number): Promise<{id:string}>{
+
+        const req = new Request("http://0.0.0.0:8000/podium/" , { method: "POST", headers: { "Content-Type": "application/json" },body: JSON.stringify({ 
+          idPlayer: idPLayer,
+          idCompetition: idCompetition,
+          place: place})});
+        const res = await fetch(req)
+        console.log("the body of get  is", res.body)
+        // el equivalente a to res en el back
+        const data = await res.json()
+        return data
+
+      }
+
+
+
 
     
   }

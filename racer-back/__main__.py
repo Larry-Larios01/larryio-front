@@ -36,6 +36,10 @@ class Competition(BaseModel):
     laps: int
     players: list[UUID4]
 
+class Podium(BaseModel):
+    id_competition: UUID4
+    id_player: UUID4
+    place: int
 
 
     #the start of the logic of the endpoit insert a user(player)
@@ -214,6 +218,40 @@ async def get_user(request: Request):
     return to_res_get_user(result)
 
 
+#the logic of insert a new podium of a specific career 
+async def from_req_insert_podium(request: Request)-> Podium:
+    data =  await request.json()
+    id_player_uuid = uuid.UUID(data["idPlayer"])
+    id_comp_uuid = uuid.UUID(data["idCompetition"])
+    place = int(data["place"])
+    podium = Podium(id_competition=id_comp_uuid, id_player=id_player_uuid, place=place)
+    return podium
+
+async def insert_podium_handler(params: Podium, conn)-> uuid:
+   
+    async with conn.cursor() as c:
+            result = await c.execute(
+                "UPDATE competitionMaster SET place = $1 WHERE id_player = $2 AND id_competition = $3;",
+                [params.place, params.id_player, params.id_competition]
+                    )
+    await conn.commit()
+    
+            
+    return params.id_player
+
+
+def to_res_insert_podium(user: uuid)-> JSONResponse:
+     return JSONResponse({
+        "id": f"{user}",
+        "message": "was succesful in the podium"
+    })
+
+async def insert_podium(request: Request):
+    params =  await from_req_insert_podium(request)
+    conn = await get_connection()
+    result = await insert_podium_handler(params, conn)
+    return to_res_insert_podium(result)
+
 
         
 
@@ -226,6 +264,7 @@ routes = [
     Route("/player/{id}", endpoint=get_user, methods=["GET"]),
     Route("/competition/", endpoint=insert_competition, methods=["POST"]),
     Route("/competition/", endpoint=get_competitions, methods=["GET"]),
+    Route("/podium/", endpoint=insert_podium, methods=["POST"]),
 ]
 
 

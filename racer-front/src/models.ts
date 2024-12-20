@@ -11,6 +11,13 @@ export type PodiumPLayer = {
 }
 
 
+export type PlayerFinished = {
+    idPlayer: string
+    idCompetition: string
+    place: number 
+}
+
+
 
 export type Competition = {
     name: string
