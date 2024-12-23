@@ -2,7 +2,8 @@
 import { onMounted, PropType, reactive, toRaw } from 'vue';
 import { ref, defineComponent } from 'vue';
 import type {Player, Results} from '@/models';
-import {CompetitionClientFetch} from '@/client'
+import {CompetitionClientFetch, CompetitionClientPg} from '@/client'
+import {useClient} from '@/composable'
 
 export default defineComponent({
   name: 'PlayerRegistration',
@@ -23,7 +24,8 @@ export default defineComponent({
         }
 
         async function save(){
-            const clientCreateplayer = new CompetitionClientFetch(); 
+            const clientCreateplayer = await useClient(); 
+            console.log("thats the client of use client", clientCreateplayer)
             for (const player of players.value){
                 const playerCreated = await clientCreateplayer.createUser(player.name);
                 console.log(`Player is created: ${playerCreated.id}`);

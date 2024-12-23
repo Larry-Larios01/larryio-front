@@ -1,3 +1,5 @@
+import { PGlite , MemoryFS} from '@electric-sql/pglite'
+//import { PGlite } from "https://cdn.jsdelivr.net/npm/@electric-sql/pglite/dist/index.js"
 
 
 interface CompetitionClient  {
@@ -106,5 +108,69 @@ interface CompetitionClient  {
 
     
   }
+
+
+  export class CompetitionClientPg implements CompetitionClient {
+
+    async createConnection(): Promise<PGlite>{
+
+        const db = new PGlite({
+          fs: new MemoryFS(),
+        })
+
+        await db.exec(`
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS users (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name TEXT
+);
+
+CREATE TABLE IF NOT EXISTS competition (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name TEXT
+);
+
+CREATE TABLE IF NOT EXISTS competition_master (
+  id_player UUID NOT NULL,
+  id_competition UUID NOT NULL,
+  place INT,
+  PRIMARY KEY (id_player, id_competition),
+  FOREIGN KEY (id_player) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (id_competition) REFERENCES competition (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS podium_detail (
+  id_player UUID NOT NULL,
+  id_competition UUID NOT NULL,
+  lap INT,
+  time INT,
+  PRIMARY KEY (id_player, id_competition, lap),
+  FOREIGN KEY (id_player) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (id_competition) REFERENCES competition (id) ON DELETE CASCADE
+);`)
+
+        return db 
+
+
+    }
+
+    async createUser(name: string): Promise<{ id: string; }> {
+     const  db = await this.createConnection()
+    const query = `INSERT INTO players (name) VALUES ($1) RETURNING id;`;
+    const result = await db.query(query, [name]);
+       return { id: result.rows[0].id };
+    }
+
+
+
+
+
+
+
+  }
+
+
+  
 
 
