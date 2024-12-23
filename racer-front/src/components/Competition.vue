@@ -2,7 +2,7 @@
 
 import { defineComponent, ref, toRaw, onMounted } from "vue"
 import type { PropType } from "vue";
-import type { Competition, Player, Results, CompetitionStarted } from "@/models";
+import type { Competition, Player, Results, CompetitionStarted, PodiumPlayerLap } from "@/models";
 import Cronometer from "./Cronometer.vue";
 import {CompetitionClientFetch} from '@/client'
 
@@ -36,25 +36,25 @@ export default defineComponent({
     setup(props, ctx) {
         const  competitionStarted = ref(false);
         const results = ref<Player[]>([]);
-        const players = ref<Player[]>([]);
+        const players = ref<PodiumPlayerLap[]>([]);
         let counter: number = 0 
         function startCompetition(){
             competitionStarted.value = true
 
         }
 
-        async function handlerFinished(resultt: Player){
+        async function handlerFinished(resultt: PodiumPlayerLap){
 
             counter = counter+1;
             if (players.value.length == 2 && counter <= 2){
                 const pushPodium = new CompetitionClientFetch()
-                const idplayerpodium = await pushPodium.insertPodium(resultt.id, props.competitionProp.id, counter)
+                const idplayerpodium = await pushPodium.insertPodium(resultt.idPlayer, props.competitionProp.id, counter)
                 console.log("id player podium", idplayerpodium)
 
             }
             if (players.value.length >= 3 && counter <= 3){
                 const pushPodium = new CompetitionClientFetch()
-                const idplayerpodium = await pushPodium.insertPodium(resultt.id, props.competitionProp.id, counter)
+                const idplayerpodium = await pushPodium.insertPodium(resultt.idPlayer, props.competitionProp.id, counter)
                 console.log("id player podium", idplayerpodium)
 
             }
@@ -64,7 +64,7 @@ export default defineComponent({
             const getUser = new CompetitionClientFetch()
             for (const player of props.competitionProp.players){
                 const user = await getUser.getUser(player)
-                players.value.push({id:user.id, name:user.name})
+                players.value.push({idPlayer:user.id, playerName:user.name, idCompetition: props.competitionProp.id})
             }
            
             
@@ -92,7 +92,7 @@ export default defineComponent({
             <p>{{ competitionProp.name }}</p>
         
         <ul v-for="player in players">
-            <li>{{ player.name}}</li>
+            <li>{{ player.playerName}}</li>
         </ul>
     </div>
     <div>
@@ -106,7 +106,7 @@ export default defineComponent({
         <div v-if="competitionStarted">
 
             <ul v-for="(player, index) in players ">
-                <label>{{ player.name }}
+                <label>{{ player.playerName }}
 
 
                     <Cronometer v-bind:laps="competitionProp.lapsCount" v-bind:player="player"  v-on:finished="handlerFinished"></Cronometer>

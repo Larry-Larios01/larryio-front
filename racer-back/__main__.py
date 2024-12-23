@@ -49,6 +49,14 @@ class PlayerPodium(BaseModel):
     place2: int 
     place3: int
 
+class PlayerPodiumLap(BaseModel):
+    id_player: UUID4
+    id_competition: str
+    lap: int
+    time: int 
+    
+     
+
 
 
     #the start of the logic of the endpoit insert a user(player)
@@ -230,6 +238,7 @@ async def get_user(request: Request):
 #the logic of insert a new podium of a specific career 
 async def from_req_insert_podium(request: Request)-> Podium:
     data =  await request.json()
+    print("the data of the request of insert podium is", data)
     id_player_uuid = uuid.UUID(data["idPlayer"])
     id_comp_uuid = uuid.UUID(data["idCompetition"])
     place = int(data["place"])
@@ -296,6 +305,37 @@ async def get_podiums(request: Request):
     return to_res_get_podiums(result)
 
 
+#the logic of insert a new podium of a specific lap
+async def from_req_insert_lap(request: Request)-> PlayerPodiumLap:
+    data =  await request.json()
+    podium_lap = PlayerPodiumLap(id_competition=data["idCompetition"], id_player=data["idPlayer"], lap=data["lap"], time=data["time"])
+    return podium_lap
+
+async def insert_lap_handler(params: PlayerPodiumLap, conn)-> uuid:
+   
+    async with conn.cursor() as c:
+            result = await c.execute(
+                "INSERT INTO podium_detail (id_player, id_competition, lap, time) VALUES ($1, $2, $3, $4)",
+                [params.id_player, params.id_competition, params.lap, params.time]
+                    )
+    await conn.commit()
+    
+            
+    return params.id_player
+
+
+def to_res_insert_lap(user: uuid)-> JSONResponse:
+     return JSONResponse({
+        "id": f"{user}",
+        "message": "was succesful in the podium"
+    })
+
+async def insert_lap(request: Request):
+    params =  await from_req_insert_lap(request)
+    conn = await get_connection()
+    result = await insert_lap_handler(params, conn)
+    return to_res_insert_lap(result)
+
         
 
 
@@ -309,6 +349,7 @@ routes = [
     Route("/competition/", endpoint=get_competitions, methods=["GET"]),
     Route("/podium/", endpoint=insert_podium, methods=["POST"]),
     Route("/podium/", endpoint=get_podiums, methods=["GET"]),
+    Route("/podium_lap/", endpoint=insert_lap, methods=["POST"]),
 ]
 
 

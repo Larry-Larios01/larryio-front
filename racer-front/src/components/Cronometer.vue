@@ -1,12 +1,13 @@
 <script lang="ts">
 import { onMounted, PropType, reactive } from 'vue';
 import { ref, defineComponent } from 'vue';
-import type {Player, Results} from '@/models';
+import type {Player, Results, PodiumPlayerLap} from '@/models';
+import {CompetitionClientFetch} from '@/client'
 
 export default defineComponent({
   name: 'Cronometer',
 
-  emits: ['finished', 'lapFinished'],
+  emits: ['finished'],
   
 
   props: {
@@ -15,7 +16,7 @@ export default defineComponent({
       required: true,   
     },
     player: {
-      type: Object as PropType<Player>, 
+      type: Object as PropType<PodiumPlayerLap>, 
       default:  "unknow",
     },
   },
@@ -29,6 +30,8 @@ export default defineComponent({
       player: props.player,
       laps: [], 
     });
+
+    let counter: number = 0;
 
     function start() {
       cronometer = setInterval(() => {
@@ -46,8 +49,16 @@ export default defineComponent({
       numbers.value = [];
     }
 
-    function lap() {
-      numbers.value.push(count.value);
+     async function lap() {
+      //numbers.value.push(count.value);
+      if(evaluate()){
+        counter = counter+1
+
+      const pushPodium = new CompetitionClientFetch()
+      const idplayerpodium = await pushPodium.insertPodiumLap(props.player.idPlayer, props.player.idCompetition, counter, count.value)
+      console.log("id player podium", idplayerpodium)
+      }
+      
 
       if (!evaluate()){
 
@@ -60,7 +71,7 @@ export default defineComponent({
     }
 
     
-    const evaluate = () => numbers.value.length < props.laps;
+    const evaluate = () => counter < props.laps;
 
     onMounted (() => {start();});
 

@@ -7,6 +7,7 @@ interface CompetitionClient  {
     getCompetitions(): Promise<{ id: string; name: string, laps:number, players: string[]}[]>
     getUser(id:string): Promise<{ id: string; name: string}>
     insertPodium (id:string, idCompetition: string, place: number): Promise<{id:string}>
+    insertPodiumLap(idPlayer:string, idCompetition: string, lap: number, time: number): Promise<{id:string}>
 
 
   }
@@ -62,10 +63,10 @@ interface CompetitionClient  {
         return data
       }
 
-      async insertPodium (idPLayer:string, idCompetition: string, place: number): Promise<{id:string}>{
+      async insertPodium (idPlayer:string, idCompetition: string, place: number): Promise<{id:string}>{
 
         const req = new Request("http://0.0.0.0:8000/podium/" , { method: "POST", headers: { "Content-Type": "application/json" },body: JSON.stringify({ 
-          idPlayer: idPLayer,
+          idPlayer: idPlayer,
           idCompetition: idCompetition,
           place: place})});
         const res = await fetch(req)
@@ -83,6 +84,21 @@ interface CompetitionClient  {
         // el equivalente a to res en el back
         const data = await res.json()
         return data
+      }
+
+      async insertPodiumLap(idPlayer:string, idCompetition: string, lap: number, time: number): Promise<{id:string}>{
+        const req = new Request("http://0.0.0.0:8000/podium_lap/" , { method: "POST", headers: { "Content-Type": "application/json" },body: JSON.stringify({ 
+          idPlayer: idPlayer,
+          idCompetition: idCompetition,
+          lap: lap ,
+          time: time})});
+        const res = await fetch(req)
+        console.log("the body of post lap is", res.text)
+        // el equivalente a to res en el back
+        const data = await res.json()
+        return data
+
+
       }
 
 
