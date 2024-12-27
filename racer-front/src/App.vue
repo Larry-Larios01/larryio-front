@@ -23,7 +23,7 @@ export default defineComponent({
     const comps = ref<CompetitionStarted[]>([]);
     const nameSelect = ref("maicol")
     const placeHolder = ref("maicol")
-    const favoriteAnimal = ref<Animal>()
+    const favoriteAnimal = ref<String>()
     const animals = ref([
   { id: "1", name: "León" },
   { id: "2", name: "Tigre" },
@@ -90,7 +90,7 @@ export default defineComponent({
       await fecthPodiums()
     }
 
-    function animalUpdate(animal: Animal){
+    function animalUpdate(animal: String){
       favoriteAnimal.value = animal
       
     }
@@ -169,7 +169,7 @@ export default defineComponent({
 
     <Select2Component v-bind:data="animals" v-bind:name="nameSelect" v-bind:placeholder="placeHolder" v-on:update:value="animalUpdate"> </Select2Component>
     <p>the favorite animal is</p>
-    <p>{{ favoriteAnimal?.name }}</p>
+    <p>{{ favoriteAnimal}}</p>
 
     <PlayerRegistration v-on:registered="registerPlayer" v-if="isVisibleRegisterplayer"> </PlayerRegistration>
 

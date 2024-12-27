@@ -1,5 +1,5 @@
 <template>
-    <select class="selectAnimal">
+    <select class="selectAnimal" >
       <option value=""></option>
       <option v-for="dt in data" v-bind:value="dt.name">
              {{ dt.name}}
@@ -13,6 +13,8 @@
   import { defineComponent, ref,onMounted, PropType} from 'vue';
   import $ from 'jquery';
   import type { Animal } from '@/models';
+  import 'select2';
+import 'select2/dist/css/select2.min.css';
 
 
 
@@ -38,25 +40,29 @@
     },
     emits: ['update:value'],
     setup(props, { emit }) {
-      const element = $('.selectAnimal')
       
       function initSelect(){
         console.log('jQuery:', $);
         console.log('select2:', $.fn.select2);
         console.log("the select 2", $.fn.select2);
-        element.select2({
+        $('.selectAnimal').select2({
           placeholder: props.placeholder,
           allowClear: true,
       });
       console.log('Elementos encontrados:', $('.selectAnimal').length);
       }
 
-      element.on('change', () => {
-        emit('update:value', element.val());
-      });
+      
+
+     
      
       onMounted(() => {
                 initSelect();
+                $('.selectAnimal').on("change", function (e) { console.log("hola", $('.selectAnimal').val());
+                emit('update:value', $('.selectAnimal').val())
+
+              });
+                
         });
       return {};
     }
