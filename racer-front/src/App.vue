@@ -23,18 +23,32 @@ export default defineComponent({
     const comps = ref<CompetitionStarted[]>([]);
     const nameSelect = ref("maicol")
     const placeHolder = ref("maicol")
-    const favoriteAnimal = ref<String>()
+    const response = ref("")
     const animals = ref([
-  { id: "1", name: "León" },
-  { id: "2", name: "Tigre" },
-  { id: "3", name: "Elefante" },
-  { id: "4", name: "Jirafa" },
-  { id: "5", name: "Cebra" },
-  { id: "6", name: "Gorila" },
-  { id: "7", name: "Panda" },
-  { id: "8", name: "Águila" },
-  { id: "9", name: "Lobo" },
-  { id: "10", name: "Serpiente" }
+    {
+        id: 0,
+        text: 'Perro'
+    },
+    {
+        id: 1,
+        text: 'Gato'
+    },
+    {
+        id: 2,
+        text: 'Pájaro'
+    },
+    {
+        id: 3,
+        text: 'Pez'
+    },
+    {
+        id: 4,
+        text: 'Conejo'
+    },
+    {
+        id: 5,
+        text: 'Tortuga'
+    }
 ]);
 
 
@@ -90,10 +104,7 @@ export default defineComponent({
       await fecthPodiums()
     }
 
-    function animalUpdate(animal: String){
-      favoriteAnimal.value = animal
-      
-    }
+  
 
     async function fetchCompetitions(){
             const getCompetitions = new CompetitionClientFetch()
@@ -145,8 +156,7 @@ export default defineComponent({
       nameSelect,
       placeHolder,
       animals,
-      animalUpdate,
-      favoriteAnimal
+      response
     }
   }
 })
@@ -167,9 +177,9 @@ export default defineComponent({
 
   <main>
 
-    <Select2Component v-bind:data="animals" v-bind:name="nameSelect" v-bind:placeholder="placeHolder" v-on:update:value="animalUpdate"> </Select2Component>
+    <Select2Component v-bind:data="animals" v-bind:name="nameSelect" v-bind:placeholder="placeHolder" v-model="response"> </Select2Component>
     <p>the favorite animal is</p>
-    <p>{{ favoriteAnimal}}</p>
+    <p>{{ response}}</p>
 
     <PlayerRegistration v-on:registered="registerPlayer" v-if="isVisibleRegisterplayer"> </PlayerRegistration>
 

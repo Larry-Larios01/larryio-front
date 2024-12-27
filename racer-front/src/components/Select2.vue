@@ -1,18 +1,16 @@
 <template>
-    <select class="selectAnimal" >
+    <select class="selectAnimal" v-model="model">
       <option value=""></option>
-      <option v-for="dt in data" v-bind:value="dt.name">
-             {{ dt.name}}
-            </option>
     </select>
+
+    <p>the model is {{ model }}</p>
   </template>
 
 
   
   <script lang="ts">
-  import { defineComponent, ref,onMounted, PropType} from 'vue';
+  import { defineComponent, ref,onMounted, defineModel} from 'vue';
   import $ from 'jquery';
-  import type { Animal } from '@/models';
   import 'select2';
 import 'select2/dist/css/select2.min.css';
 
@@ -26,7 +24,7 @@ import 'select2/dist/css/select2.min.css';
     name: 'Select2Component',
     props: {
       data: {
-        type: Array as PropType<Animal[]>,
+        type: Array,
         required: true
       },
       placeholder: {
@@ -40,31 +38,34 @@ import 'select2/dist/css/select2.min.css';
     },
     emits: ['update:value'],
     setup(props, { emit }) {
+      const model = defineModel()
       
       function initSelect(){
         console.log('jQuery:', $);
         console.log('select2:', $.fn.select2);
         console.log("the select 2", $.fn.select2);
         $('.selectAnimal').select2({
+          data: props.data,
           placeholder: props.placeholder,
           allowClear: true,
       });
       console.log('Elementos encontrados:', $('.selectAnimal').length);
+
       }
 
       
-
+        
      
      
       onMounted(() => {
                 initSelect();
                 $('.selectAnimal').on("change", function (e) { console.log("hola", $('.selectAnimal').val());
-                emit('update:value', $('.selectAnimal').val())
+              
 
               });
                 
         });
-      return {};
+      return {model};
     }
   });
   </script>
