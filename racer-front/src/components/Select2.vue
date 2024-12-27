@@ -1,5 +1,5 @@
 <template>
-    <select class="selectAnimal" v-model="model">
+    <select class="select" v-model="model">
       <option value=""></option>
     </select>
 
@@ -44,12 +44,12 @@ import 'select2/dist/css/select2.min.css';
         console.log('jQuery:', $);
         console.log('select2:', $.fn.select2);
         console.log("the select 2", $.fn.select2);
-        $('.selectAnimal').select2({
+        $('.select').select2({
           data: props.data,
           placeholder: props.placeholder,
           allowClear: true,
       });
-      console.log('Elementos encontrados:', $('.selectAnimal').length);
+      console.log('Elementos encontrados:', $('.select').length);
 
       }
 
@@ -59,7 +59,7 @@ import 'select2/dist/css/select2.min.css';
      
       onMounted(() => {
                 initSelect();
-                $('.selectAnimal').on("change", function (e) { console.log("hola", $('.selectAnimal').val());
+                $('.select').on("change", function (e) { console.log("hola", $('.select').val());
               
 
               });
