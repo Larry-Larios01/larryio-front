@@ -5,12 +5,14 @@ import CompetitionRegistration from "./components/CompetitionRegistration.vue";
 import type { Competition as CompetitionT, Player, Results, PodiumPLayer, CompetitionStarted } from "./models";
 import PlayerRegistration from "./components/PlayerRegistration.vue";
 import {CompetitionClientFetch} from '@/client'
+import  Select2Component from "@/components/Select2.vue";
 export default defineComponent({
   name: "App",
   components: {
     Competition,
     CompetitionRegistration,
-    PlayerRegistration
+    PlayerRegistration,
+    Select2Component
   },
   setup() {
     const hello = ref("world")
@@ -19,6 +21,10 @@ export default defineComponent({
     const playersRegistered = ref<Player[]>([]);
     const podiumPlayers = ref<PodiumPLayer[]>([]);
     const comps = ref<CompetitionStarted[]>([]);
+    const nameSelect = ref("maicol")
+    const placeHolder = ref("maicol")
+    const data = ref([])
+
 
 
    
@@ -118,7 +124,10 @@ export default defineComponent({
       showCreateplayer,
       showCreatecompetition,
       showStartcompetition,
-      comps
+      comps,
+      nameSelect,
+      placeHolder,
+      data
     }
   }
 })
@@ -138,6 +147,8 @@ export default defineComponent({
   </header>
 
   <main>
+
+    <Select2Component v-bind:data="data" v-bind:name="nameSelect" v-bind:placeholder="placeHolder"> </Select2Component>
     
 
     <PlayerRegistration v-on:registered="registerPlayer" v-if="isVisibleRegisterplayer"> </PlayerRegistration>

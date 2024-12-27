@@ -12,12 +12,16 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "jquery": "^3.7.1",
+    "select2": "^4.1.0-rc.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
+    "@types/jquery": "^3.5.32",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.9.3",
+    "@types/select2": "^4.0.63",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",

@@ -2,6 +2,7 @@ import { useNetwork } from '@vueuse/core'
 import {CompetitionClientFetch, CompetitionClientPg} from '@/client'
 
 
+
 const maria = useNetwork()
 
 
