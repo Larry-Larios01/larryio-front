@@ -2,7 +2,7 @@
 import { defineComponent, ref, onMounted } from "vue"
 import Competition from "./components/Competition.vue"
 import CompetitionRegistration from "./components/CompetitionRegistration.vue";
-import type { Competition as CompetitionT, Player, Results, PodiumPLayer, CompetitionStarted } from "./models";
+import type { Competition as CompetitionT, Player, Results, PodiumPLayer, CompetitionStarted, Animal } from "./models";
 import PlayerRegistration from "./components/PlayerRegistration.vue";
 import {CompetitionClientFetch} from '@/client'
 import  Select2Component from "@/components/Select2.vue";
@@ -23,7 +23,19 @@ export default defineComponent({
     const comps = ref<CompetitionStarted[]>([]);
     const nameSelect = ref("maicol")
     const placeHolder = ref("maicol")
-    const data = ref([])
+    const favoriteAnimal = ref<Animal>()
+    const animals = ref([
+  { id: "1", name: "León" },
+  { id: "2", name: "Tigre" },
+  { id: "3", name: "Elefante" },
+  { id: "4", name: "Jirafa" },
+  { id: "5", name: "Cebra" },
+  { id: "6", name: "Gorila" },
+  { id: "7", name: "Panda" },
+  { id: "8", name: "Águila" },
+  { id: "9", name: "Lobo" },
+  { id: "10", name: "Serpiente" }
+]);
 
 
 
@@ -56,7 +68,7 @@ export default defineComponent({
     }
 
     function showCreateplayer(){
-      isVisibleRegisterplayer.value = true;
+      isVisibleRegisterplayer.value = true; //fix after 
       isVisiblecompetitionRegistration.value = false;
       isVisiblestartCompetition.value = false
     }
@@ -76,6 +88,11 @@ export default defineComponent({
 
     async function podiumFinal(podium: Results[]) {
       await fecthPodiums()
+    }
+
+    function animalUpdate(animal: Animal){
+      favoriteAnimal.value = animal
+      
     }
 
     async function fetchCompetitions(){
@@ -127,7 +144,9 @@ export default defineComponent({
       comps,
       nameSelect,
       placeHolder,
-      data
+      animals,
+      animalUpdate,
+      favoriteAnimal
     }
   }
 })
@@ -135,7 +154,7 @@ export default defineComponent({
 
 <template>
 <div class="principal">
-  <header>
+ <header>
       <div class="top-of-header">
         <p>Racer App</p>
       </div>
@@ -148,8 +167,9 @@ export default defineComponent({
 
   <main>
 
-    <Select2Component v-bind:data="data" v-bind:name="nameSelect" v-bind:placeholder="placeHolder"> </Select2Component>
-    
+    <Select2Component v-bind:data="animals" v-bind:name="nameSelect" v-bind:placeholder="placeHolder" v-on:update:value="animalUpdate"> </Select2Component>
+    <p>the favorite animal is</p>
+    <p>{{ favoriteAnimal?.name }}</p>
 
     <PlayerRegistration v-on:registered="registerPlayer" v-if="isVisibleRegisterplayer"> </PlayerRegistration>
 

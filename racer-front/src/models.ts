@@ -13,6 +13,19 @@ export type PodiumPLayer = {
 }
 
 
+export type Animal = {
+    id: string
+    name: String
+}
+
+
+export type PodiumPlayerLap = {
+    idCompetition: string 
+    idPlayer : string
+    playerName: string
+    
+}
+
 export type PlayerFinished = {
     idPlayer: string
     idCompetition: string
